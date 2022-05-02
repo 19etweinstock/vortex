@@ -689,6 +689,10 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
           continue;
         uint64_t mem_addr = rsdata[t][0].i + immsrc;         
         uint64_t mem_data = 0;
+        // if we have a TLB miss or hit, we need to impact the LSUunit timing sim.
+        // need to add another queue for addresses looking for translation unless it's in the LSU TLB
+        // just do functional TLB handling here
+        
         core_->dcache_read(&mem_data, mem_addr, mem_bytes);
         trace->mem_addrs.at(t).push_back({mem_addr, mem_bytes});        
         DP(4, "LOAD MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);
