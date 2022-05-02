@@ -51,30 +51,28 @@ int main(int argc, char **argv) {
   std::cout << "Running " << imgFileName << "..." << std::endl;
   
   {
-    uint16_t ptbr = 1;//dsljfl;jfls;
-    // create processor configuation
-    ArchDef arch(num_cores, num_warps, num_threads, ptbr);
-
     // create memory module
     RAM ram(RAM_PAGE_SIZE);
 
-    uint64_t PTBR;
+    uint64_t ptbr;
 
     // load program
     {
       std::string program_ext(fileExtension(imgFileName.c_str()));
       if (program_ext == "bin") {
-        PTBR = ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR);
+        ptbr = ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR);
       } else if (program_ext == "hex") {
         // return PTBR for this process on image load
         // starting address PC=0x80000000
-        PTBR = ram.loadHexImage(imgFileName.c_str());
+        ptbr = ram.loadHexImage(imgFileName.c_str());
       } else {
         std::cout << "*** error: only *.bin or *.hex images supported." << std::endl;
         return -1;
       }
     }
 
+    // create processor configuation
+    ArchDef arch(num_cores, num_warps, num_threads, ptbr);
 
 
     // create processor

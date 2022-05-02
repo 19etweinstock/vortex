@@ -19,13 +19,13 @@ private:
   uint16_t num_regs_;
   uint16_t num_csrs_;
   uint16_t num_barriers_;
-  uint16_t ptbr;
+  uint64_t ptbr_;
   
 public:
   ArchDef(uint16_t num_cores, 
           uint16_t num_warps, 
           uint16_t num_threads,
-          uint16_t ptbr)   
+          uint64_t ptbr)   
     : num_cores_(num_cores)
     , num_warps_(num_warps)
     , num_threads_(num_threads)
@@ -34,7 +34,7 @@ public:
     , num_regs_(32)
     , num_csrs_(4096)
     , num_barriers_(NUM_BARRIERS)
-    , ptbr(ptbr)
+    , ptbr_(ptbr)
   {}
 
   uint16_t wsize() const { 
@@ -69,8 +69,8 @@ public:
     return num_cores_;
   }
 
-  uint16_t ptbr() const {
-    return ptbr;
+  uint64_t ptbr() const {
+    return ptbr_;
   }
 };
 

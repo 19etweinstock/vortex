@@ -167,7 +167,7 @@ public:
 private:
   struct FTEntry{
     FTEntry() {};
-    FTEntry(uint16_t protected_, uint8_t mapped, uint8_t referenced):
+    FTEntry(uint8_t protected_, uint8_t mapped, uint8_t referenced):
       protected_(protected_), mapped(mapped), referenced(referenced){};
 
     uint8_t protected_;          /* 1 if the frame holds a page table and is
@@ -183,7 +183,6 @@ private:
 
   uint64_t size_;
   uint32_t page_bits_;
-  FTEntry* frame_table;
   mutable std::unordered_map<uint64_t, uint8_t*> pages_;
   mutable uint8_t* last_page_;
   mutable uint64_t last_page_index_;

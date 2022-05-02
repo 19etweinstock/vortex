@@ -151,6 +151,7 @@ void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup) {
 }
 
 void MemoryUnit::icache_read(void *data, uint64_t addr, uint64_t size, bool sup) {
+  __unused(sup);
   uint64_t pAddr;
   pAddr = addr;
   return decoder_.read(data, pAddr, size);
@@ -185,11 +186,6 @@ RAM::RAM(uint32_t page_size)
   , last_page_(nullptr)
   , last_page_index_(0) {    
    assert(ispow2(page_size));
-  // this is where we need to maintain the PFN
-  // put the frame table at address 0
-  frame_table = reinterpret_cast<FTEntry*>(this->get(0));
-  frame_table[0].protected_ = 1;
-  frame_table[0].mapped = 1;
 }
 
 RAM::~RAM() {
@@ -222,12 +218,14 @@ uint8_t *RAM::get(uint64_t address) const {
     } else {
       // makes a new page and adds it to the RAM
       uint8_t *ptr = new uint8_t[page_size];
+      // std::cout << ptr << std::endl;
       // set uninitialized data to "baadf00d"
       for (uint32_t i = 0; i < page_size; ++i) {
         ptr[i] = (0xbaadf00d >> ((i & 0x3) * 8)) & 0xff;
       }
       pages_.emplace(page_index, ptr);
       page = ptr;
+      // std::cout << page << std::endl;
     }
     last_page_ = page;
     last_page_index_ = page_index;
@@ -265,15 +263,7 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
   this->clear();
   this->write(content.data(), destination, size);
 
-  
-  // need to return the physical frame number corresponding to this program
-  // just find the next unmapped pfn
-  uint64_t pfn = 0;
-  while(frame_table[pfn++].mapped){}
-  // protected because it is the page directory for this process
-  frame_table[pfn].protected_ = 1;
-  frame_table[pfn].mapped = 1;
-  return pfn;
+  return 1;
 }
 
 uint64_t RAM::loadHexImage(const char* filename) {
@@ -308,6 +298,15 @@ uint64_t RAM::loadHexImage(const char* filename) {
   char *line = content.data();
 
   this->clear();
+
+  // this is where we need to maintain the PFN
+  // put the frame table at address 0
+  // FTEntry* frame_table = reinterpret_cast<FTEntry*>(this->get(0));
+
+  FTEntry frame_table;
+  frame_table.protected_ = 1;
+  frame_table.mapped = 1;
+  this->write(&frame_table, 0, sizeof(FTEntry));
 
   while (true) {
     if (line[0] == ':') {
@@ -344,10 +343,12 @@ uint64_t RAM::loadHexImage(const char* filename) {
   }
   // need to return the physical frame number corresponding to this program
   // just find the next unmapped pfn
-  uint64_t pfn = 0;
-  while(frame_table[pfn++].mapped){}
-  // protected because it is the page directory for this process
-  frame_table[pfn].protected_ = 1;
-  frame_table[pfn].mapped = 1;
+  uint64_t pfn = -1;
+  while(*this->get(1 + sizeof(FTEntry) * ++pfn) == 1 ){}
+
+  FTEntry page_table;
+  page_table.protected_ = 1;
+  page_table.mapped = 1;
+  this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
   return pfn;
 }
