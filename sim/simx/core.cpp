@@ -220,6 +220,7 @@ void Core::schedule() {
   auto trace = new pipeline_trace_t(uuid, arch_);
 
   auto& warp = warps_.at(scheduled_warp);
+    // this call populates the trace with data through warp->execute and 
   warp->eval(trace);
 
   DT(3, "pipeline-schedule: " << *trace);
