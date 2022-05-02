@@ -128,12 +128,29 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, ui
     if (iter->second.flags & flagMask)
       return iter->second;
     else {
-      // flags are wrong
-      throw std::invalid_argument("false");
+      //PAGE FAULT
+      int addr = ptbr * pageSize_ + vAddr;
+      int oldphys = RAM[addr];
+      if (oldphys is valid) {
+        return oldphys;
+      }
+      RAM[addr] = valid; // make this valid and point to a 
+      int phyz = getPhysFrame();
+      tlbAdd(vAddr,phyz,flagMask)
+      return phyz;
+      // throw PageFault(vAddr, false);
     }
   } else {
-    // it's not in the TLB
-    throw std::invalid_argument("true");
+    // throw PageFault(vAddr, true);
+      int addr = ptbr * pageSize_ + vAddr;
+      int oldphys = RAM[addr];
+      if (oldphys is valid) {
+        return oldphys;
+      }
+      RAM[addr] = valid; // make this valid and point to a 
+      int phyz = getPhysFrame();
+      tlbAdd(vAddr,phyz,flagMask)
+      return phyz;
   }
 }
 
