@@ -122,14 +122,14 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
 }
 
 MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
-  uint64_t PTEaddr = ptbr * pageSize_ + vAddr * sizeof(PTEntry);
+  uint64_t PTEaddr = ptbr * pageSize_ + (vAddr / pageSize_  - 0x80000) * sizeof(PTEntry);
+  std::cout << ptbr << " " << std::hex << PTEaddr << std::endl;
   uint8_t valid;
   decoder_.read(&valid, PTEaddr, 1);
   if (valid){
     uint64_t pfn;
     decoder_.read(&pfn, PTEaddr, sizeof(pfn));
     return tlbAdd(vAddr, pfn, flagMask);
-    // return tlb_.find(vaddr/);
   }
   else {
     // we need a new page table entry
@@ -137,9 +137,13 @@ MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMa
     uint8_t pfn_mapped;
     // fetch a new physical frame
     do{
-      decoder_.read(&pfn_mapped, 1 + sizeof(RAM::FTEntry) * ++pfn, 1);
+      decoder_.read(&pfn_mapped, 1 + sizeof(FTEntry) * ++pfn, 1);
     }
     while(pfn_mapped == 1);
+
+    uint8_t zero = 0;
+    for (uint64_t i = 0; i < pageSize_; i++)
+      decoder_.write(&zero, i + pfn * pageSize_, 1);
 
     PTEntry entry;
     entry.pfn = pfn;
@@ -151,6 +155,7 @@ MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMa
 
 MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
   // vAddr / pageSize => vpn
+  std::cout << std::hex << vAddr / pageSize_ << std::endl;
   auto iter = tlb_.find(vAddr / pageSize_);
   if (iter != tlb_.end()) {
     if (iter->second.flags & flagMask)
@@ -166,6 +171,7 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, ui
 }
 
 void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
+  std::cout << std::hex << addr << std::endl;
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
@@ -348,6 +354,8 @@ uint64_t RAM::loadHexImage(const char* filename) {
   FTEntry frame_table;
   frame_table.protected_ = 1;
   frame_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i) =  0;
   this->write(&frame_table, 0, sizeof(FTEntry));
 
   while (true) {
@@ -391,6 +399,8 @@ uint64_t RAM::loadHexImage(const char* filename) {
   FTEntry page_table;
   page_table.protected_ = 1;
   page_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i + pfn * (1 << page_bits_)) =  0;
   this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
   return pfn;
 }
