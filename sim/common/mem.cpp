@@ -300,7 +300,7 @@ void RAM::write(const void *data, uint64_t addr, uint64_t size) {
   }
 }
 
-uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
+uint64_t RAM::loadBinImage(const char* filename, uint64_t destination, uint64_t addrBytes) {
   std::ifstream ifs(filename);
   if (!ifs) {
     std::cout << "error: " << filename << " not found" << std::endl;
@@ -314,15 +314,15 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
 
   this->clear();
 
-  for (int i = 0; i < 1 << page_bits_; i++)
-    *this->get(i) =  0;
   FTEntry frame_table;
   frame_table.protected_ = 1;
   frame_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i) =  0;
   this->write(&frame_table, 0, sizeof(FTEntry));
 
-  this->write(content.data(), destination, size);
-
+  // need to return the physical frame number corresponding to this program
+  // just find the next unmapped pfn
   uint64_t pfn = -1;
   while(*this->get(1 + sizeof(FTEntry) * ++pfn) == 1 ){}
 
@@ -332,6 +332,13 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
   for (int i = 0; i < 1 << page_bits_; i++)
     *this->get(i + pfn * (1 << page_bits_)) =  0;
   this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
+
+  MemoryUnit mmu_(1 << page_bits_, addrBytes, false);
+
+  mmu_.attach(*this, 0, 0xFFFFFFFF);
+
+  mmu_.write(content.data(), destination, size, 0, pfn);
+
   return pfn;
 }
 

@@ -153,7 +153,7 @@ public:
   void read(void *data, uint64_t addr, uint64_t size) override;  
   void write(const void *data, uint64_t addr, uint64_t size) override;
 
-  uint64_t loadBinImage(const char* filename, uint64_t destination);
+  uint64_t loadBinImage(const char* filename, uint64_t destination, uint64_t addrBytes);
   uint64_t loadHexImage(const char* filename, uint64_t addrBytes);
 
   uint8_t& operator[](uint64_t address) {

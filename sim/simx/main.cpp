@@ -60,7 +60,7 @@ int main(int argc, char **argv) {
     {
       std::string program_ext(fileExtension(imgFileName.c_str()));
       if (program_ext == "bin") {
-        ptbr = ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR);
+        ptbr = ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR,ArchDef(0,0,0,0).wsize());
       } else if (program_ext == "hex") {
         // return PTBR for this process on image load
         // starting address PC=0x80000000
