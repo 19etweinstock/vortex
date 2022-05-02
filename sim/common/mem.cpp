@@ -197,8 +197,9 @@ void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, bool sup,
   decoder_.write(data, pAddr, size);
 }
 
-void MemoryUnit::tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags) {
+MemoryUnit::TLBEntry MemoryUnit::tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags) {
   tlb_[virt / pageSize_] = TLBEntry(phys / pageSize_, flags);
+  return tlb_[virt / pageSize_];
 }
 
 void MemoryUnit::tlbRm(uint64_t va) {

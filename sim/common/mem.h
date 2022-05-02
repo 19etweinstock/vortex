@@ -75,7 +75,7 @@ public:
   void icache_read(void *data, uint64_t addr, uint64_t size, bool sup);  
   void write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);
 
-  void tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags);
+  MemoryUnit::TLBEntry tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags);
   void tlbRm(uint64_t va);
   void tlbFlush() {
     tlb_.clear();
