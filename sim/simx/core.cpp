@@ -432,8 +432,8 @@ void Core::dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t
   }
 }
 
-uint32_t Core::tex_read(uint32_t unit, uint32_t u, uint32_t v, uint32_t lod, std::vector<mem_addr_size_t>* mem_addrs) {
-  return tex_units_.at(unit).read(u, v, lod, mem_addrs);
+uint32_t Core::tex_read(uint32_t unit, uint32_t u, uint32_t v, uint32_t lod, std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr) {
+  return tex_units_.at(unit).read(u, v, lod, mem_addrs, ptbr);
 }
 
 void Core::writeToStdOut(const void* data, uint64_t addr, uint32_t size) {

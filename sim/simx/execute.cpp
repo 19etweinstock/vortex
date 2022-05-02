@@ -1426,7 +1426,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         auto u     = rsdata[t][0].i;
         auto v     = rsdata[t][1].i;
         auto lod   = rsdata[t][2].i;
-        auto color = core_->tex_read(unit, u, v, lod, &trace->mem_addrs.at(t));
+        auto color = core_->tex_read(unit, u, v, lod, &trace->mem_addrs.at(t), ptbr_);
         rddata[t].i = color;
       }
       rd_write = true;
