@@ -111,9 +111,10 @@ MemoryUnit::MemoryUnit(uint64_t pageSize, uint64_t addrBytes, bool disableVm)
   : pageSize_(pageSize)
   , addrBytes_(addrBytes)
   , disableVM_(disableVm) {
-  if (!disableVm) {
-    tlb_[0] = TLBEntry(0, 077);
-  }
+  // if (!disableVm) {
+    // I don't think we need this dummy entry?
+    // tlb_[0] = TLBEntry(0, 077);
+  // }
 }
 
 void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {

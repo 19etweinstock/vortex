@@ -20,7 +20,9 @@ Core::Core(const SimContext& ctx, const ArchDef &arch, uint32_t id)
     , id_(id)
     , arch_(arch)
     , decoder_(arch)
-    , mmu_(0, arch.wsize(), true)
+    // uint64_t pageSize, uint64_t addrBytes, bool disableVm
+    // enable VM and provide a valid page size
+    , mmu_(RAM_PAGE_SIZE, arch.wsize(), false)
     , smem_(RAM_PAGE_SIZE)
     , tex_units_(NUM_TEX_UNITS, this)
     , warps_(arch.num_warps())
