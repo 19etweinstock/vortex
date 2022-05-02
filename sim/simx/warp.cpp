@@ -49,7 +49,7 @@ void Warp::eval(pipeline_trace_t *trace) {
   /* Fetch and decode. */    
 
   uint32_t instr_code = 0;
-  core_->icache_read(&instr_code, PC_, sizeof(uint32_t));
+  core_->icache_read(&instr_code, PC_, sizeof(uint32_t), ptbr_);
   auto instr = core_->decoder().decode(instr_code);
   if (!instr) {
     std::cout << std::hex << "Error: invalid instruction 0x" << instr_code << ", at PC=" << PC_ << std::endl;

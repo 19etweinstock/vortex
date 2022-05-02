@@ -64,7 +64,7 @@ int main(int argc, char **argv) {
       } else if (program_ext == "hex") {
         // return PTBR for this process on image load
         // starting address PC=0x80000000
-        ptbr = ram.loadHexImage(imgFileName.c_str());
+        ptbr = ram.loadHexImage(imgFileName.c_str(),ArchDef(0,0,0,0).wsize());
       } else {
         std::cout << "*** error: only *.bin or *.hex images supported." << std::endl;
         return -1;

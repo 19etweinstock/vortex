@@ -107,7 +107,7 @@ public:
   
   WarpMask barrier(uint32_t bar_id, uint32_t count, uint32_t warp_id);
 
-  void icache_read(void* data, uint64_t addr, uint32_t size);
+  void icache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr);
 
   void dcache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr);
 

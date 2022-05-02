@@ -7,6 +7,10 @@
 
 using namespace vortex;
 
+
+#define DEBUG(args) 
+#define DEBUG(args) args
+
 RamMemDevice::RamMemDevice(const char *filename, uint32_t wordSize) 
   : wordSize_(wordSize) {
   std::ifstream input(filename);
@@ -122,13 +126,16 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
 }
 
 MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
+  DEBUG(std::cout << "faulting" << std::endl;)
   uint64_t PTEaddr = ptbr * pageSize_ + (vAddr / pageSize_  - 0x80000) * sizeof(PTEntry);
-  std::cout << ptbr << " " << std::hex << PTEaddr << std::endl;
+  DEBUG(std::cout << ptbr << " " << std::hex << PTEaddr << std::endl;)
   uint8_t valid;
   decoder_.read(&valid, PTEaddr, 1);
   if (valid){
+    DEBUG(std::cout << "valid" << std::endl;)
     uint64_t pfn;
-    decoder_.read(&pfn, PTEaddr, sizeof(pfn));
+    decoder_.read(&pfn, PTEaddr+8, sizeof(pfn));
+    DEBUG(std::cout << pfn << std::endl;)
     return tlbAdd(vAddr, pfn, flagMask);
   }
   else {
@@ -140,14 +147,23 @@ MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMa
       decoder_.read(&pfn_mapped, 1 + sizeof(FTEntry) * ++pfn, 1);
     }
     while(pfn_mapped == 1);
+    DEBUG(std::cout << "pfn " << pfn << std::endl;)
+
+    FTEntry page_table;
+    page_table.protected_ = 1;
+    page_table.mapped = 1;
+    decoder_.write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
 
     uint8_t zero = 0;
     for (uint64_t i = 0; i < pageSize_; i++)
       decoder_.write(&zero, i + pfn * pageSize_, 1);
 
+    
+
     PTEntry entry;
-    entry.pfn = pfn;
     entry.valid = 1;
+    entry.pfn = pfn;
+    DEBUG(std::cout << entry.pfn << std::endl;)
     decoder_.write(&entry, PTEaddr, sizeof(entry));
     return tlbAdd(vAddr, pfn, flagMask);
   }
@@ -155,23 +171,25 @@ MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMa
 
 MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
   // vAddr / pageSize => vpn
-  std::cout << std::hex << vAddr / pageSize_ << std::endl;
+  DEBUG(std::cout << std::hex << vAddr / pageSize_ << std::endl;)
   auto iter = tlb_.find(vAddr / pageSize_);
   if (iter != tlb_.end()) {
     if (iter->second.flags & flagMask)
       return iter->second;
     else {
       //PAGE FAULT
+      DEBUG(std::cout << "flags" << std::endl;)
       return handlePageFault(vAddr, flagMask, ptbr);
     }
   } else {
+      DEBUG(std::cout << "miss" << std::endl;)
     // throw PageFault(vAddr, true);
       return handlePageFault(vAddr, flagMask, ptbr);
   }
 }
 
 void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
-  std::cout << std::hex << addr << std::endl;
+  DEBUG(std::cout << std::hex << addr << std::endl;)
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
@@ -180,31 +198,30 @@ void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64
     TLBEntry t = this->tlbLookup(addr, flagMask, ptbr);
     //                          this is the offset portion
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
-  }
-  return decoder_.read(data, pAddr, size);
-}
+    DEBUG(std::cout << std::hex << t.pfn << std::endl;)
 
-void MemoryUnit::icache_read(void *data, uint64_t addr, uint64_t size, bool sup) {
-  __unused(sup);
-  uint64_t pAddr;
-  pAddr = addr;
+  }
+  DEBUG(std::cout << std::hex << pAddr << std::endl;)
   return decoder_.read(data, pAddr, size);
 }
 
 void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
+  DEBUG(std::cout << std::hex << addr << std::endl;)
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
   } else {
-    uint32_t flagMask = sup ? 16 : 2;
+    uint32_t flagMask = sup ? 8 : 1;
     TLBEntry t = tlbLookup(addr, flagMask, ptbr);
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
   }
+  DEBUG(std::cout << std::hex << pAddr << std::endl;)
   decoder_.write(data, pAddr, size);
 }
 
-MemoryUnit::TLBEntry MemoryUnit::tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags) {
-  tlb_[virt / pageSize_] = TLBEntry(phys / pageSize_, flags);
+MemoryUnit::TLBEntry MemoryUnit::tlbAdd(uint64_t virt, uint64_t pfn, uint32_t flags) {
+  DEBUG(std::cout << virt / pageSize_ << std::endl;)
+  tlb_[virt / pageSize_] = TLBEntry(pfn, flags);
   return tlb_[virt / pageSize_];
 }
 
@@ -253,14 +270,14 @@ uint8_t *RAM::get(uint64_t address) const {
     } else {
       // makes a new page and adds it to the RAM
       uint8_t *ptr = new uint8_t[page_size];
-      // std::cout << ptr << std::endl;
+      DEBUG(std::cout << ptr << std::endl;)
       // set uninitialized data to "baadf00d"
       for (uint32_t i = 0; i < page_size; ++i) {
         ptr[i] = (0xbaadf00d >> ((i & 0x3) * 8)) & 0xff;
       }
       pages_.emplace(page_index, ptr);
       page = ptr;
-      // std::cout << page << std::endl;
+      DEBUG(std::cout << page << std::endl;)
     }
     last_page_ = page;
     last_page_index_ = page_index;
@@ -297,6 +314,8 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
 
   this->clear();
 
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i) =  0;
   FTEntry frame_table;
   frame_table.protected_ = 1;
   frame_table.mapped = 1;
@@ -310,11 +329,13 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
   FTEntry page_table;
   page_table.protected_ = 1;
   page_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i + pfn * (1 << page_bits_)) =  0;
   this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
   return pfn;
 }
 
-uint64_t RAM::loadHexImage(const char* filename) {
+uint64_t RAM::loadHexImage(const char* filename, uint64_t addrBytes) {
   auto hti = [&](char c)->uint32_t {
     if (c >= 'A' && c <= 'F')
       return c - 'A' + 10;
@@ -358,6 +379,22 @@ uint64_t RAM::loadHexImage(const char* filename) {
     *this->get(i) =  0;
   this->write(&frame_table, 0, sizeof(FTEntry));
 
+  // need to return the physical frame number corresponding to this program
+  // just find the next unmapped pfn
+  uint64_t pfn = -1;
+  while(*this->get(1 + sizeof(FTEntry) * ++pfn) == 1 ){}
+
+  FTEntry page_table;
+  page_table.protected_ = 1;
+  page_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i + pfn * (1 << page_bits_)) =  0;
+  this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
+
+  MemoryUnit mmu_(1 << page_bits_, addrBytes, false);
+
+  mmu_.attach(*this, 0, 0xFFFFFFFF);
+
   while (true) {
     if (line[0] == ':') {
       uint32_t byteCount = hToI(line + 1, 2);
@@ -369,7 +406,10 @@ uint64_t RAM::loadHexImage(const char* filename) {
           uint32_t addr  = nextAddr + i;
           uint32_t value = hToI(line + 9 + i * 2, 2);
           // this->write(&value, addr, sizeof(value));
-          *this->get(addr) = value;
+          // need to make this addr virtualized
+          DEBUG(std::cout << std::hex << addr << std::endl;)
+          mmu_.write(&value, addr, 1, 0, pfn);
+          // *this->get(addr) = value;
         }
         break;
       case 2:
@@ -391,16 +431,6 @@ uint64_t RAM::loadHexImage(const char* filename) {
     ++line;
     --size;
   }
-  // need to return the physical frame number corresponding to this program
-  // just find the next unmapped pfn
-  uint64_t pfn = -1;
-  while(*this->get(1 + sizeof(FTEntry) * ++pfn) == 1 ){}
-
-  FTEntry page_table;
-  page_table.protected_ = 1;
-  page_table.mapped = 1;
-  for (int i = 0; i < 1 << page_bits_; i++)
-    *this->get(i + pfn * (1 << page_bits_)) =  0;
-  this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
+  
   return pfn;
 }

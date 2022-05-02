@@ -72,7 +72,6 @@ public:
   void attach(MemDevice &m, uint64_t start, uint64_t end);
 
   void read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);  
-  void icache_read(void *data, uint64_t addr, uint64_t size, bool sup);  
   void write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);
 
   void tlbFlush() {
@@ -155,7 +154,7 @@ public:
   void write(const void *data, uint64_t addr, uint64_t size) override;
 
   uint64_t loadBinImage(const char* filename, uint64_t destination);
-  uint64_t loadHexImage(const char* filename);
+  uint64_t loadHexImage(const char* filename, uint64_t addrBytes);
 
   uint8_t& operator[](uint64_t address) {
     return *this->get(address);

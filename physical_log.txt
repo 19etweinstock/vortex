@@ -1,0 +1,340 @@
+Running tests/riscv/isa/rv32uf-p-ldst.hex...
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000000 (#0)
+DEBUG Instr 0x480006f: JAL: x0 <- imm=0x48
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000048 (#1)
+DEBUG Instr 0x93: ADDI: x1 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x1={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000004c (#2)
+DEBUG Instr 0x113: ADDI: x2 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x2={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000050 (#3)
+DEBUG Instr 0x193: ADDI: x3 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x3={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000054 (#4)
+DEBUG Instr 0x213: ADDI: x4 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x4={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000058 (#5)
+DEBUG Instr 0x293: ADDI: x5 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x5={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000005c (#6)
+DEBUG Instr 0x313: ADDI: x6 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x6={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000060 (#7)
+DEBUG Instr 0x393: ADDI: x7 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x7={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000064 (#8)
+DEBUG Instr 0x413: ADDI: x8 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x8={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000068 (#9)
+DEBUG Instr 0x493: ADDI: x9 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x9={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000006c (#10)
+DEBUG Instr 0x513: ADDI: x10 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x10={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000070 (#11)
+DEBUG Instr 0x593: ADDI: x11 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x11={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000074 (#12)
+DEBUG Instr 0x613: ADDI: x12 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x12={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000078 (#13)
+DEBUG Instr 0x693: ADDI: x13 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x13={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000007c (#14)
+DEBUG Instr 0x713: ADDI: x14 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x14={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000080 (#15)
+DEBUG Instr 0x793: ADDI: x15 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x15={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000084 (#16)
+DEBUG Instr 0x813: ADDI: x16 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x16={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000088 (#17)
+DEBUG Instr 0x893: ADDI: x17 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x17={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000008c (#18)
+DEBUG Instr 0x913: ADDI: x18 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x18={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000090 (#19)
+DEBUG Instr 0x993: ADDI: x19 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x19={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000094 (#20)
+DEBUG Instr 0xa13: ADDI: x20 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x20={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000098 (#21)
+DEBUG Instr 0xa93: ADDI: x21 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x21={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000009c (#22)
+DEBUG Instr 0xb13: ADDI: x22 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x22={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000a0 (#23)
+DEBUG Instr 0xb93: ADDI: x23 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x23={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000a4 (#24)
+DEBUG Instr 0xc13: ADDI: x24 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x24={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000a8 (#25)
+DEBUG Instr 0xc93: ADDI: x25 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x25={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000ac (#26)
+DEBUG Instr 0xd13: ADDI: x26 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x26={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000b0 (#27)
+DEBUG Instr 0xd93: ADDI: x27 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x27={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000b4 (#28)
+DEBUG Instr 0xe13: ADDI: x28 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x28={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000b8 (#29)
+DEBUG Instr 0xe93: ADDI: x29 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x29={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000bc (#30)
+DEBUG Instr 0xf13: ADDI: x30 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x30={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000c0 (#31)
+DEBUG Instr 0xf93: ADDI: x31 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x31={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000c4 (#32)
+DEBUG Instr 0xf1402573: CSRRS: x10 <- x0, imm=0xf14
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x10={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000c8 (#33)
+DEBUG Instr 0x51063: BNE: x10, x0, imm=0x0
+DEBUG Src Reg [0]: x10={0, -, -, -}
+DEBUG Src Reg [1]: x0={0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000cc (#34)
+DEBUG Instr 0x297: AUIPC: x5 <- imm=0x0
+DEBUG Dest Reg: x5={0x800000cc, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000d0 (#35)
+DEBUG Instr 0x1028293: ADDI: x5 <- x5, imm=0x10
+DEBUG Src Reg [0]: x5={800000cc, -, -, -}
+DEBUG Dest Reg: x5={0x800000dc, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000d4 (#36)
+DEBUG Instr 0x30529073: CSRRW: x0 <- x5, imm=0x305
+DEBUG Src Reg [0]: x5={800000dc, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000d8 (#37)
+DEBUG Instr 0x18005073: CSRRWI: x0 <- x0, imm=0x180
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000dc (#38)
+DEBUG Instr 0x297: AUIPC: x5 <- imm=0x0
+DEBUG Dest Reg: x5={0x800000dc, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000e0 (#39)
+DEBUG Instr 0x2028293: ADDI: x5 <- x5, imm=0x20
+DEBUG Src Reg [0]: x5={800000dc, -, -, -}
+DEBUG Dest Reg: x5={0x800000fc, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000e4 (#40)
+DEBUG Instr 0x30529073: CSRRW: x0 <- x5, imm=0x305
+DEBUG Src Reg [0]: x5={800000fc, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000e8 (#41)
+DEBUG Instr 0x800002b7: LUI: x5 <- imm=0xfff80000
+DEBUG Dest Reg: x5={0x80000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000ec (#42)
+DEBUG Instr 0xfff28293: ADDI: x5 <- x5, imm=0xffffffff
+DEBUG Src Reg [0]: x5={80000000, -, -, -}
+DEBUG Dest Reg: x5={0x7fffffff, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000f0 (#43)
+DEBUG Instr 0x3b029073: CSRRW: x0 <- x5, imm=0x3b0
+DEBUG Src Reg [0]: x5={7fffffff, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000f4 (#44)
+DEBUG Instr 0x1f00293: ADDI: x5 <- x0, imm=0x1f
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x5={0x1f, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000f8 (#45)
+DEBUG Instr 0x3a029073: CSRRW: x0 <- x5, imm=0x3a0
+DEBUG Src Reg [0]: x5={1f, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800000fc (#46)
+DEBUG Instr 0x30405073: CSRRWI: x0 <- x0, imm=0x304
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000100 (#47)
+DEBUG Instr 0x297: AUIPC: x5 <- imm=0x0
+DEBUG Dest Reg: x5={0x80000100, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000104 (#48)
+DEBUG Instr 0x1428293: ADDI: x5 <- x5, imm=0x14
+DEBUG Src Reg [0]: x5={80000100, -, -, -}
+DEBUG Dest Reg: x5={0x80000114, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000108 (#49)
+DEBUG Instr 0x30529073: CSRRW: x0 <- x5, imm=0x305
+DEBUG Src Reg [0]: x5={80000114, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000010c (#50)
+DEBUG Instr 0x30205073: CSRRWI: x0 <- x0, imm=0x302
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000110 (#51)
+DEBUG Instr 0x30305073: CSRRWI: x0 <- x0, imm=0x303
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000114 (#52)
+DEBUG Instr 0x193: ADDI: x3 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x3={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000118 (#53)
+DEBUG Instr 0x297: AUIPC: x5 <- imm=0x0
+DEBUG Dest Reg: x5={0x80000118, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000011c (#54)
+DEBUG Instr 0xeec28293: ADDI: x5 <- x5, imm=0xfffffeec
+DEBUG Src Reg [0]: x5={80000118, -, -, -}
+DEBUG Dest Reg: x5={0x80000004, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000120 (#55)
+DEBUG Instr 0x30529073: CSRRW: x0 <- x5, imm=0x305
+DEBUG Src Reg [0]: x5={80000004, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000124 (#56)
+DEBUG Instr 0x100513: ADDI: x10 <- x0, imm=0x1
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x10={0x1, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000128 (#57)
+DEBUG Instr 0x1f51513: SLLI: x10 <- x10, imm=0x1f
+DEBUG Src Reg [0]: x10={1, -, -, -}
+DEBUG Dest Reg: x10={0x80000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000012c (#58)
+DEBUG Instr 0x54c63: BLT: x10, x0, imm=0x18
+DEBUG Src Reg [0]: x10={80000000, -, -, -}
+DEBUG Src Reg [1]: x0={0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000144 (#59)
+DEBUG Instr 0x293: ADDI: x5 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x5={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000148 (#60)
+DEBUG Instr 0x28a63: BEQ: x5, x0, imm=0x14
+DEBUG Src Reg [0]: x5={0, -, -, -}
+DEBUG Src Reg [1]: x0={0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000015c (#61)
+DEBUG Instr 0x30005073: CSRRWI: x0 <- x0, imm=0x300
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000160 (#62)
+DEBUG Instr 0x2537: LUI: x10 <- imm=0x2
+DEBUG Dest Reg: x10={0x2000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000164 (#63)
+DEBUG Instr 0x30052073: CSRRS: x0 <- x10, imm=0x300
+DEBUG Src Reg [0]: x10={2000, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000168 (#64)
+DEBUG Instr 0x305073: CSRRWI: x0 <- x0, imm=0x3
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000016c (#65)
+DEBUG Instr 0x297: AUIPC: x5 <- imm=0x0
+DEBUG Dest Reg: x5={0x8000016c, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000170 (#66)
+DEBUG Instr 0x1428293: ADDI: x5 <- x5, imm=0x14
+DEBUG Src Reg [0]: x5={8000016c, -, -, -}
+DEBUG Dest Reg: x5={0x80000180, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000174 (#67)
+DEBUG Instr 0x34129073: CSRRW: x0 <- x5, imm=0x341
+DEBUG Src Reg [0]: x5={80000180, -, -, -}
+DEBUG Dest Reg: DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000178 (#68)
+DEBUG Instr 0xf1402573: CSRRS: x10 <- x0, imm=0xf14
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x10={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000017c (#69)
+DEBUG Instr 0x30200073: MRET: x0 <- x0, imm=0x302
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000180 (#70)
+DEBUG Instr 0x2597: AUIPC: x11 <- imm=0x2
+DEBUG Dest Reg: x11={0x80002180, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000184 (#71)
+DEBUG Instr 0xe8058593: ADDI: x11 <- x11, imm=0xfffffe80
+DEBUG Src Reg [0]: x11={80002180, -, -, -}
+DEBUG Dest Reg: x11={0x80002000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000188 (#72)
+DEBUG Instr 0x45a087: FLW: f1 <- M[r11 + 0x4]
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Dest Reg: f1={0xffffffff40000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000018c (#73)
+DEBUG Instr 0x15aa27: FSW: M[r11 + 0x14] <- f1
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Src Reg [1]: f1={ffffffff40000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000190 (#74)
+DEBUG Instr 0x145a503: LW: x10 <- M[r11 + 0x14]
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Dest Reg: x10={0x40000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000194 (#75)
+DEBUG Instr 0x400003b7: LUI: x7 <- imm=0x40000
+DEBUG Dest Reg: x7={0x40000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x80000198 (#76)
+DEBUG Instr 0x200193: ADDI: x3 <- x0, imm=0x2
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x3={0x2, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x8000019c (#77)
+DEBUG Instr 0x2751463: BNE: x10, x7, imm=0x28
+DEBUG Src Reg [0]: x10={40000000, -, -, -}
+DEBUG Src Reg [1]: x7={40000000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001a0 (#78)
+DEBUG Instr 0x2597: AUIPC: x11 <- imm=0x2
+DEBUG Dest Reg: x11={0x800021a0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001a4 (#79)
+DEBUG Instr 0xe6058593: ADDI: x11 <- x11, imm=0xfffffe60
+DEBUG Src Reg [0]: x11={800021a0, -, -, -}
+DEBUG Dest Reg: x11={0x80002000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001a8 (#80)
+DEBUG Instr 0x5a087: FLW: f1 <- M[r11 + 0x0]
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Dest Reg: f1={0xffffffffbf800000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001ac (#81)
+DEBUG Instr 0x15ac27: FSW: M[r11 + 0x18] <- f1
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Src Reg [1]: f1={ffffffffbf800000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001b0 (#82)
+DEBUG Instr 0x185a503: LW: x10 <- M[r11 + 0x18]
+DEBUG Src Reg [0]: x11={80002000, -, -, -}
+DEBUG Dest Reg: x10={0xbf800000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001b4 (#83)
+DEBUG Instr 0xbf8003b7: LUI: x7 <- imm=0xfffbf800
+DEBUG Dest Reg: x7={0xbf800000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001b8 (#84)
+DEBUG Instr 0x300193: ADDI: x3 <- x0, imm=0x3
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x3={0x3, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001bc (#85)
+DEBUG Instr 0x751463: BNE: x10, x7, imm=0x8
+DEBUG Src Reg [0]: x10={bf800000, -, -, -}
+DEBUG Src Reg [1]: x7={bf800000, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001c0 (#86)
+DEBUG Instr 0x2301063: BNE: x0, x3, imm=0x20
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Src Reg [1]: x3={3, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001e0 (#87)
+DEBUG Instr 0xff0000f: FENCE: x0 <- x0, imm=0xff
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001e4 (#88)
+DEBUG Instr 0x100193: ADDI: x3 <- x0, imm=0x1
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x3={0x1, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001e8 (#89)
+DEBUG Instr 0x5d00893: ADDI: x17 <- x0, imm=0x5d
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x17={0x5d, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001ec (#90)
+DEBUG Instr 0x513: ADDI: x10 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+DEBUG Dest Reg: x10={0x0, -, -, -}
+DEBUG Fetch: coreid=0, wid=0, tmask=0001, PC=0x800001f0 (#91)
+DEBUG Instr 0x73: ECALL: x0 <- x0, imm=0x0
+DEBUG Src Reg [0]: x0={0, -, -, -}
+Passed.
