@@ -40,7 +40,7 @@ struct vtype {
 
 class Warp {
 public:
-  Warp(Core *core, uint32_t id);
+  Warp(Core *core, uint32_t id, uint16_t ptbr);
 
   void clear();
   
@@ -96,6 +96,7 @@ private:
   void execute(const Instr &instr, pipeline_trace_t *trace);
   
   uint32_t id_;
+  uint16_t ptbr;
   Core *core_;
   bool active_;
   

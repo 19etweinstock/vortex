@@ -51,8 +51,9 @@ int main(int argc, char **argv) {
   std::cout << "Running " << imgFileName << "..." << std::endl;
   
   {
+    uint16_t ptbr = 1;//dsljfl;jfls;
     // create processor configuation
-    ArchDef arch(num_cores, num_warps, num_threads);
+    ArchDef arch(num_cores, num_warps, num_threads, ptbr);
 
     // create memory module
     RAM ram(RAM_PAGE_SIZE);
@@ -73,6 +74,8 @@ int main(int argc, char **argv) {
         return -1;
       }
     }
+
+
 
     // create processor
     Processor processor(arch);

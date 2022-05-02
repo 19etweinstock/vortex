@@ -76,7 +76,7 @@ Core::Core(const SimContext& ctx, const ArchDef &arch, uint32_t id)
     , pending_icache_(arch_.num_warps())
 {  
   for (uint32_t i = 0; i < arch_.num_warps(); ++i) {
-    warps_.at(i) = std::make_shared<Warp>(this, i);
+    warps_.at(i) = std::make_shared<Warp>(this, i, arch.ptbr());
   }
 
   // register execute units
