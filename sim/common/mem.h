@@ -119,6 +119,16 @@ private:
     uint32_t flags;
   };
 
+  struct PTEntry{
+    PTEntry() {};
+    PTEntry(uint8_t valid, uint64_t pfn):
+      valid(valid), pfn(pfn) {}
+
+    uint8_t valid;
+    uint64_t pfn;
+  };
+
+  TLBEntry handlePageFault(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr);
   TLBEntry tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr);
 
   std::unordered_map<uint64_t, TLBEntry> tlb_;
@@ -178,6 +188,7 @@ private:
     uint8_t referenced;         /* 1 if the entry has been recently
                                    used, 0 otherwise */
   };
+  friend class MemoryUnit;
 
   uint8_t *get(uint64_t address) const;
 

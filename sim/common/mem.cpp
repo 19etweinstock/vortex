@@ -121,6 +121,34 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
   decoder_.map(start, end, m);
 }
 
+MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
+  uint64_t PTEaddr = ptbr * pageSize_ + vAddr * sizeof(PTEntry);
+  uint8_t valid;
+  decoder_.read(&valid, PTEaddr, 1);
+  if (valid){
+    uint64_t pfn;
+    decoder_.read(&pfn, PTEaddr, sizeof(pfn));
+    return tlbAdd(vAddr, pfn, flagMask);
+    // return tlb_.find(vaddr/);
+  }
+  else {
+    // we need a new page table entry
+    uint64_t pfn = -1;
+    uint8_t pfn_mapped;
+    // fetch a new physical frame
+    do{
+      decoder_.read(&pfn_mapped, 1 + sizeof(RAM::FTEntry) * ++pfn, 1);
+    }
+    while(pfn_mapped == 1);
+
+    PTEntry entry;
+    entry.pfn = pfn;
+    entry.valid = 1;
+    decoder_.write(&entry, PTEaddr, sizeof(entry));
+    return tlbAdd(vAddr, pfn, flagMask);
+  }
+}
+
 MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
   // vAddr / pageSize => vpn
   auto iter = tlb_.find(vAddr / pageSize_);
@@ -129,28 +157,11 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, ui
       return iter->second;
     else {
       //PAGE FAULT
-      int addr = ptbr * pageSize_ + vAddr;
-      int oldphys = RAM[addr];
-      if (oldphys is valid) {
-        return oldphys;
-      }
-      RAM[addr] = valid; // make this valid and point to a 
-      int phyz = getPhysFrame();
-      tlbAdd(vAddr,phyz,flagMask)
-      return phyz;
-      // throw PageFault(vAddr, false);
+      return handlePageFault(vAddr, flagMask, ptbr);
     }
   } else {
     // throw PageFault(vAddr, true);
-      int addr = ptbr * pageSize_ + vAddr;
-      int oldphys = RAM[addr];
-      if (oldphys is valid) {
-        return oldphys;
-      }
-      RAM[addr] = valid; // make this valid and point to a 
-      int phyz = getPhysFrame();
-      tlbAdd(vAddr,phyz,flagMask)
-      return phyz;
+      return handlePageFault(vAddr, flagMask, ptbr);
   }
 }
 
@@ -278,9 +289,22 @@ uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
   ifs.read((char*)content.data(), size);
 
   this->clear();
+
+  FTEntry frame_table;
+  frame_table.protected_ = 1;
+  frame_table.mapped = 1;
+  this->write(&frame_table, 0, sizeof(FTEntry));
+
   this->write(content.data(), destination, size);
 
-  return 1;
+  uint64_t pfn = -1;
+  while(*this->get(1 + sizeof(FTEntry) * ++pfn) == 1 ){}
+
+  FTEntry page_table;
+  page_table.protected_ = 1;
+  page_table.mapped = 1;
+  this->write(&page_table, sizeof(FTEntry) * pfn, sizeof(FTEntry));
+  return pfn;
 }
 
 uint64_t RAM::loadHexImage(const char* filename) {
