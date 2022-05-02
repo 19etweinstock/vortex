@@ -404,7 +404,7 @@ WarpMask Core::barrier(uint32_t bar_id, uint32_t count, uint32_t warp_id) {
 }
 
 void Core::icache_read(void *data, uint64_t addr, uint32_t size) {
-  mmu_.read(data, addr, size, 0);
+  mmu_.icache_read(data, addr, size, 0);
 }
 
 void Core::dcache_read(void *data, uint64_t addr, uint32_t size) {  

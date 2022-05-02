@@ -122,15 +122,18 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
 }
 
 MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask) {
+  // vAddr / pageSize => vpn
   auto iter = tlb_.find(vAddr / pageSize_);
   if (iter != tlb_.end()) {
     if (iter->second.flags & flagMask)
       return iter->second;
     else {
-      throw PageFault(vAddr, false);
+      // flags are wrong
+      throw std::invalid_argument("false");
     }
   } else {
-    throw PageFault(vAddr, true);
+    // it's not in the TLB
+    throw std::invalid_argument("true");
   }
 }
 
@@ -141,8 +144,15 @@ void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup) {
   } else {
     uint32_t flagMask = sup ? 8 : 1;
     TLBEntry t = this->tlbLookup(addr, flagMask);
+    //                          this is the offset portion
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
   }
+  return decoder_.read(data, pAddr, size);
+}
+
+void MemoryUnit::icache_read(void *data, uint64_t addr, uint64_t size, bool sup) {
+  uint64_t pAddr;
+  pAddr = addr;
   return decoder_.read(data, pAddr, size);
 }
 
@@ -175,6 +185,11 @@ RAM::RAM(uint32_t page_size)
   , last_page_(nullptr)
   , last_page_index_(0) {    
    assert(ispow2(page_size));
+  // this is where we need to maintain the PFN
+  // put the frame table at address 0
+  frame_table = reinterpret_cast<FTEntry*>(this->get(0));
+  frame_table[0].protected_ = 1;
+  frame_table[0].mapped = 1;
 }
 
 RAM::~RAM() {
@@ -194,6 +209,7 @@ uint64_t RAM::size() const {
 uint8_t *RAM::get(uint64_t address) const {
   uint32_t page_size   = 1 << page_bits_;  
   uint32_t page_offset = address & (page_size - 1);
+  // page number
   uint64_t page_index  = address >> page_bits_;
 
   uint8_t* page;
@@ -204,6 +220,7 @@ uint8_t *RAM::get(uint64_t address) const {
     if (it != pages_.end()) {
       page = it->second;
     } else {
+      // makes a new page and adds it to the RAM
       uint8_t *ptr = new uint8_t[page_size];
       // set uninitialized data to "baadf00d"
       for (uint32_t i = 0; i < page_size; ++i) {
@@ -233,7 +250,7 @@ void RAM::write(const void *data, uint64_t addr, uint64_t size) {
   }
 }
 
-void RAM::loadBinImage(const char* filename, uint64_t destination) {
+uint64_t RAM::loadBinImage(const char* filename, uint64_t destination) {
   std::ifstream ifs(filename);
   if (!ifs) {
     std::cout << "error: " << filename << " not found" << std::endl;
@@ -247,9 +264,19 @@ void RAM::loadBinImage(const char* filename, uint64_t destination) {
 
   this->clear();
   this->write(content.data(), destination, size);
+
+  
+  // need to return the physical frame number corresponding to this program
+  // just find the next unmapped pfn
+  uint64_t pfn = 0;
+  while(frame_table[pfn++].mapped){}
+  // protected because it is the page directory for this process
+  frame_table[pfn].protected_ = 1;
+  frame_table[pfn].mapped = 1;
+  return pfn;
 }
 
-void RAM::loadHexImage(const char* filename) {
+uint64_t RAM::loadHexImage(const char* filename) {
   auto hti = [&](char c)->uint32_t {
     if (c >= 'A' && c <= 'F')
       return c - 'A' + 10;
@@ -292,6 +319,7 @@ void RAM::loadHexImage(const char* filename) {
         for (uint32_t i = 0; i < byteCount; i++) {
           uint32_t addr  = nextAddr + i;
           uint32_t value = hToI(line + 9 + i * 2, 2);
+          // this->write(&value, addr, sizeof(value));
           *this->get(addr) = value;
         }
         break;
@@ -314,4 +342,12 @@ void RAM::loadHexImage(const char* filename) {
     ++line;
     --size;
   }
+  // need to return the physical frame number corresponding to this program
+  // just find the next unmapped pfn
+  uint64_t pfn = 0;
+  while(frame_table[pfn++].mapped){}
+  // protected because it is the page directory for this process
+  frame_table[pfn].protected_ = 1;
+  frame_table[pfn].mapped = 1;
+  return pfn;
 }

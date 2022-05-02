@@ -57,13 +57,17 @@ int main(int argc, char **argv) {
     // create memory module
     RAM ram(RAM_PAGE_SIZE);
 
+    uint64_t PTBR;
+
     // load program
     {
       std::string program_ext(fileExtension(imgFileName.c_str()));
       if (program_ext == "bin") {
-        ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR);
+        PTBR = ram.loadBinImage(imgFileName.c_str(), STARTUP_ADDR);
       } else if (program_ext == "hex") {
-        ram.loadHexImage(imgFileName.c_str());
+        // return PTBR for this process on image load
+        // starting address PC=0x80000000
+        PTBR = ram.loadHexImage(imgFileName.c_str());
       } else {
         std::cout << "*** error: only *.bin or *.hex images supported." << std::endl;
         return -1;
