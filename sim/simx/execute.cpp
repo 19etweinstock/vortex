@@ -692,8 +692,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         // if we have a TLB miss or hit, we need to impact the LSUunit timing sim.
         // need to add another queue for addresses looking for translation unless it's in the LSU TLB
         // just do functional TLB handling here
-        
-        core_->dcache_read(&mem_data, mem_addr, mem_bytes);
+        core_->dcache_read(&mem_data, mem_addr, mem_bytes, ptbr_);
         trace->mem_addrs.at(t).push_back({mem_addr, mem_bytes});        
         DP(4, "LOAD MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);
         switch (func3) {
@@ -732,7 +731,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         for (uint32_t i = 0; i < vl_; i++) {
           Word mem_addr = ((rsdata[i][0].i) & 0xFFFFFFFC) + (i * vtype_.vsew / 8);
           Word mem_data = 0;
-          core_->dcache_read(&mem_data, mem_addr, 4);
+          core_->dcache_read(&mem_data, mem_addr, 4, ptbr_);
           Word *result_ptr = (Word *)(vd.data() + i);
           *result_ptr = mem_data;
           DP(4, "LOAD MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);        
@@ -772,7 +771,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         case 1:
         case 2:
         case 3:
-          core_->dcache_write(&mem_data, mem_addr, mem_bytes);  
+          core_->dcache_write(&mem_data, mem_addr, mem_bytes, ptbr_);  
           break;
         default:
           std::abort();

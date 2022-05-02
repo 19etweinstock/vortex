@@ -121,7 +121,7 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
   decoder_.map(start, end, m);
 }
 
-MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask) {
+MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr) {
   // vAddr / pageSize => vpn
   auto iter = tlb_.find(vAddr / pageSize_);
   if (iter != tlb_.end()) {
@@ -137,13 +137,13 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask) {
   }
 }
 
-void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup) {
+void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
   } else {
     uint32_t flagMask = sup ? 8 : 1;
-    TLBEntry t = this->tlbLookup(addr, flagMask);
+    TLBEntry t = this->tlbLookup(addr, flagMask, ptbr);
     //                          this is the offset portion
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
   }
@@ -157,13 +157,13 @@ void MemoryUnit::icache_read(void *data, uint64_t addr, uint64_t size, bool sup)
   return decoder_.read(data, pAddr, size);
 }
 
-void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, bool sup) {
+void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
   } else {
     uint32_t flagMask = sup ? 16 : 2;
-    TLBEntry t = tlbLookup(addr, flagMask);
+    TLBEntry t = tlbLookup(addr, flagMask, ptbr);
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
   }
   decoder_.write(data, pAddr, size);

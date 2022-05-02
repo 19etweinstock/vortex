@@ -407,17 +407,17 @@ void Core::icache_read(void *data, uint64_t addr, uint32_t size) {
   mmu_.icache_read(data, addr, size, 0);
 }
 
-void Core::dcache_read(void *data, uint64_t addr, uint32_t size) {  
+void Core::dcache_read(void *data, uint64_t addr, uint32_t size, uint64_t ptbr) {  
   auto type = get_addr_type(addr, size);
   if (type == AddrType::Shared) {
     addr &= (SMEM_SIZE-1);
     smem_.read(data, addr, size);
   } else {  
-    mmu_.read(data, addr, size, 0);
+    mmu_.read(data, addr, size, 0, ptbr);
   }
 }
 
-void Core::dcache_write(const void* data, uint64_t addr, uint32_t size) {  
+void Core::dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t ptbr) {  
   if (addr >= IO_COUT_ADDR 
    && addr <= (IO_COUT_ADDR + IO_COUT_SIZE - 1)) {
      this->writeToStdOut(data, addr, size);
@@ -427,7 +427,7 @@ void Core::dcache_write(const void* data, uint64_t addr, uint32_t size) {
       addr &= (SMEM_SIZE-1);
       smem_.write(data, addr, size);
     } else {
-      mmu_.write(data, addr, size, 0);
+      mmu_.write(data, addr, size, 0, ptbr);
     }
   }
 }

@@ -71,9 +71,9 @@ public:
 
   void attach(MemDevice &m, uint64_t start, uint64_t end);
 
-  void read(void *data, uint64_t addr, uint64_t size, bool sup);  
+  void read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);  
   void icache_read(void *data, uint64_t addr, uint64_t size, bool sup);  
-  void write(const void *data, uint64_t addr, uint64_t size, bool sup);
+  void write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);
 
   void tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags);
   void tlbRm(uint64_t va);
@@ -119,7 +119,7 @@ private:
     uint32_t flags;
   };
 
-  TLBEntry tlbLookup(uint64_t vAddr, uint32_t flagMask);
+  TLBEntry tlbLookup(uint64_t vAddr, uint32_t flagMask, uint64_t ptbr);
 
   std::unordered_map<uint64_t, TLBEntry> tlb_;
   uint64_t pageSize_;
