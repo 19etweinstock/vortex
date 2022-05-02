@@ -153,6 +153,16 @@ public:
     return *this->get(address);
   }
 
+    // make page method
+
+  // allocate physical frame table
+  // page of physical frame entry structs -> just tracts which pages are being used
+  // do not even need a physical frame table
+
+  // really just need a page table at page (1)
+  // we can put a dummy frame table at page (0)
+
+  
 private:
 
   uint8_t *get(uint64_t address) const;
