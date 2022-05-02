@@ -121,16 +121,35 @@ void MemoryUnit::attach(MemDevice &m, uint64_t start, uint64_t end) {
   decoder_.map(start, end, m);
 }
 
-MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask) {
+MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, int64_t ptbr) {
   auto iter = tlb_.find(vAddr / pageSize_);
   if (iter != tlb_.end()) {
     if (iter->second.flags & flagMask)
       return iter->second;
     else {
-      throw PageFault(vAddr, false);
+      //PAGE FAULT
+      int addr = ptbr * pageSize_ + vAddr;
+      int oldphys = RAM[addr];
+      if (oldphys is valid) {
+        return oldphys;
+      }
+      RAM[addr] = valid; // make this valid and point to a 
+      int phyz = getPhysFrame();
+      tlbAdd(vAddr,phyz,flagMask)
+      return phyz;
+      // throw PageFault(vAddr, false);
     }
   } else {
-    throw PageFault(vAddr, true);
+    // throw PageFault(vAddr, true);
+      int addr = ptbr * pageSize_ + vAddr;
+      int oldphys = RAM[addr];
+      if (oldphys is valid) {
+        return oldphys;
+      }
+      RAM[addr] = valid; // make this valid and point to a 
+      int phyz = getPhysFrame();
+      tlbAdd(vAddr,phyz,flagMask)
+      return phyz;
   }
 }
 
