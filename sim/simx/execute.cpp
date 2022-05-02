@@ -784,7 +784,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         case 6: {
           // store word and unit strided (not checking for unit stride)          
           uint32_t mem_data = *(uint32_t *)(vreg_file_.at(instr.getVs3()).data() + i);
-          core_->dcache_write(&mem_data, mem_addr, 4);
+          core_->dcache_write(&mem_data, mem_addr, 4, ptbr_);
           DP(4, "STORE MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);
           break;
         } 
