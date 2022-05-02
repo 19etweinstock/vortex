@@ -112,6 +112,13 @@ void LsuUnit::tick() {
     bool is_write = (trace->lsu.type == LsuType::STORE);
 
     // duplicates detection
+    // duplicatation detection probably requires previously doing VA-to-PA translation to know what the actual address is
+    // if virtual address translation fails we need to send a memory request to perform the page table walks. so we schedule a memory request
+    // that does the page table walk
+    // we then need a separate queue within the LSU unit for traces that are awaiting address translation
+    // need to add functionality on dcache response we need to track if this is part of the translation process
+    // also need to a CSR for PTBR?? (need to check virtual memory lab) no because there is no context switch
+    
     bool is_dup = false;
     if (trace->tmask.test(0)) {
         uint64_t addr_mask = sizeof(uint32_t)-1;
