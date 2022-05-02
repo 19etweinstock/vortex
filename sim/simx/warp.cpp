@@ -10,9 +10,10 @@
 
 using namespace vortex;
 
-Warp::Warp(Core *core, uint32_t id)
+Warp::Warp(Core *core, uint32_t id, uint64_t ptbr)
     : id_(id)
     , core_(core)
+    , ptbr_(ptbr)
     , ireg_file_(core->arch().num_threads(), std::vector<Word>(core->arch().num_regs()))
     , freg_file_(core->arch().num_threads(), std::vector<FWord>(core->arch().num_regs()))
     , vreg_file_(core->arch().num_threads(), std::vector<Byte>(core->arch().vsize()))

@@ -72,6 +72,7 @@ public:
   void attach(MemDevice &m, uint64_t start, uint64_t end);
 
   void read(void *data, uint64_t addr, uint64_t size, bool sup);  
+  void icache_read(void *data, uint64_t addr, uint64_t size, bool sup);  
   void write(const void *data, uint64_t addr, uint64_t size, bool sup);
 
   void tlbAdd(uint64_t virt, uint64_t phys, uint32_t flags);
@@ -142,8 +143,8 @@ public:
   void read(void *data, uint64_t addr, uint64_t size) override;  
   void write(const void *data, uint64_t addr, uint64_t size) override;
 
-  void loadBinImage(const char* filename, uint64_t destination);
-  void loadHexImage(const char* filename);
+  uint64_t loadBinImage(const char* filename, uint64_t destination);
+  uint64_t loadHexImage(const char* filename);
 
   uint8_t& operator[](uint64_t address) {
     return *this->get(address);
@@ -164,11 +165,24 @@ public:
 
   
 private:
+  struct FTEntry{
+    FTEntry() {};
+    FTEntry(uint8_t protected_, uint8_t mapped, uint8_t referenced):
+      protected_(protected_), mapped(mapped), referenced(referenced){};
+
+    uint8_t protected_;          /* 1 if the frame holds a page table and is
+                                   immune from eviction, 0 otherwise */
+    /* -- Used for data pages -- */
+    uint8_t mapped;             /* 1 if the frame is mapped, 0
+                                   otherwise */
+    uint8_t referenced;         /* 1 if the entry has been recently
+                                   used, 0 otherwise */
+  };
 
   uint8_t *get(uint64_t address) const;
 
   uint64_t size_;
-  uint32_t page_bits_;  
+  uint32_t page_bits_;
   mutable std::unordered_map<uint64_t, uint8_t*> pages_;
   mutable uint8_t* last_page_;
   mutable uint64_t last_page_index_;
