@@ -75,8 +75,9 @@ Core::Core(const SimContext& ctx, const ArchDef &arch, uint32_t id)
     , decode_latch_("decode")
     , pending_icache_(arch_.num_warps())
 {  
-  for (uint32_t i = 0; i < arch_.num_warps(); ++i) {
-    warps_.at(i) = std::make_shared<Warp>(this, i, arch.ptbr());
+  for (uint32_t i = 0; i < arch_.num_warps() / arch_.ptbr().size(); ++i) {
+    for (uint32_t j = 0, size = arch_.ptbr().size(); j < size; ++j)
+      warps_.at(i*size+j) = std::make_shared<Warp>(this, i*size+j, arch_.ptbr()[j]);
   }
 
   // register execute units
@@ -129,9 +130,9 @@ Core::~Core() {
 void Core::reset() {
   for (auto& warp : warps_) {
     warp->clear();
+    warp->setTmask(0, true);
   }
-  warps_.at(0)->setTmask(0, true);
-  active_warps_ = 1;
+  active_warps_ = (1 << arch_.ptbr().size()) -1;
 
   for (auto& tex_unit : tex_units_) {
     tex_unit.clear();
@@ -221,7 +222,11 @@ void Core::schedule() {
 
   auto trace = new pipeline_trace_t(uuid, arch_);
 
+  trace->cid = id_;
+
   auto& warp = warps_.at(scheduled_warp);
+
+  trace->wid = warp->id();
     // this call populates the trace with data through warp->execute and 
   warp->eval(trace);
 
@@ -403,21 +408,21 @@ WarpMask Core::barrier(uint32_t bar_id, uint32_t count, uint32_t warp_id) {
   return ret;
 }
 
-void Core::icache_read(void *data, uint64_t addr, uint32_t size, uint64_t ptbr) {
-  mmu_.read(data, addr, size, 0, ptbr);
+void Core::icache_read(void *data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid) {
+  mmu_.read(data, addr, size, ptbr, wid);
 }
 
-void Core::dcache_read(void *data, uint64_t addr, uint32_t size, uint64_t ptbr) {  
+void Core::dcache_read(void *data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid) {  
   auto type = get_addr_type(addr, size);
   if (type == AddrType::Shared) {
     addr &= (SMEM_SIZE-1);
     smem_.read(data, addr, size);
   } else {  
-    mmu_.read(data, addr, size, 0, ptbr);
+    mmu_.read(data, addr, size, ptbr, wid);
   }
 }
 
-void Core::dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t ptbr) {  
+void Core::dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid) {  
   if (addr >= IO_COUT_ADDR 
    && addr <= (IO_COUT_ADDR + IO_COUT_SIZE - 1)) {
      this->writeToStdOut(data, addr, size);
@@ -427,13 +432,13 @@ void Core::dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t
       addr &= (SMEM_SIZE-1);
       smem_.write(data, addr, size);
     } else {
-      mmu_.write(data, addr, size, 0, ptbr);
+      mmu_.write(data, addr, size, ptbr, wid);
     }
   }
 }
 
-uint32_t Core::tex_read(uint32_t unit, uint32_t u, uint32_t v, uint32_t lod, std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr) {
-  return tex_units_.at(unit).read(u, v, lod, mem_addrs, ptbr);
+uint32_t Core::tex_read(uint32_t unit, uint32_t u, uint32_t v, uint32_t lod, std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr, uint32_t wid) {
+  return tex_units_.at(unit).read(u, v, lod, mem_addrs, ptbr, wid);
 }
 
 void Core::writeToStdOut(const void* data, uint64_t addr, uint32_t size) {

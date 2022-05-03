@@ -33,7 +33,7 @@ void TexUnit::set_state(uint32_t state, uint32_t value) {
 uint32_t TexUnit::read(int32_t u, 
                        int32_t v, 
                        int32_t lod, 
-                       std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr) {
+                       std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr, uint32_t wid) {
   //--
   auto xu = Fixed<TEX_FXD_FRAC>::make(u);
   auto xv = Fixed<TEX_FXD_FRAC>::make(v);
@@ -62,10 +62,10 @@ uint32_t TexUnit::read(int32_t u,
 
     // memory lookup
     uint32_t texel00(0), texel01(0), texel10(0), texel11(0);
-    core_->dcache_read(&texel00, addr00, stride, ptbr);
-    core_->dcache_read(&texel01, addr01, stride, ptbr);
-    core_->dcache_read(&texel10, addr10, stride, ptbr);
-    core_->dcache_read(&texel11, addr11, stride, ptbr);
+    core_->dcache_read(&texel00, addr00, stride, ptbr, wid);
+    core_->dcache_read(&texel01, addr01, stride, ptbr, wid);
+    core_->dcache_read(&texel10, addr10, stride, ptbr, wid);
+    core_->dcache_read(&texel11, addr11, stride, ptbr, wid);
 
     mem_addrs->push_back({addr00, stride});
     mem_addrs->push_back({addr01, stride});
@@ -86,7 +86,7 @@ uint32_t TexUnit::read(int32_t u,
 
     // memory lookup
     uint32_t texel(0);
-    core_->dcache_read(&texel, addr, stride, ptbr);
+    core_->dcache_read(&texel, addr, stride, ptbr, wid);
     mem_addrs->push_back({addr, stride});
 
     // filtering

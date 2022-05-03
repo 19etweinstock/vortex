@@ -692,7 +692,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         // if we have a TLB miss or hit, we need to impact the LSUunit timing sim.
         // need to add another queue for addresses looking for translation unless it's in the LSU TLB
         // just do functional TLB handling here
-        core_->dcache_read(&mem_data, mem_addr, mem_bytes, ptbr_);
+        core_->dcache_read(&mem_data, mem_addr, mem_bytes, ptbr_, id_);
         trace->mem_addrs.at(t).push_back({mem_addr, mem_bytes});        
         DP(4, "LOAD MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);
         switch (func3) {
@@ -731,7 +731,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         for (uint32_t i = 0; i < vl_; i++) {
           Word mem_addr = ((rsdata[i][0].i) & 0xFFFFFFFC) + (i * vtype_.vsew / 8);
           Word mem_data = 0;
-          core_->dcache_read(&mem_data, mem_addr, 4, ptbr_);
+          core_->dcache_read(&mem_data, mem_addr, 4, ptbr_, id_);
           Word *result_ptr = (Word *)(vd.data() + i);
           *result_ptr = mem_data;
           DP(4, "LOAD MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);        
@@ -771,7 +771,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         case 1:
         case 2:
         case 3:
-          core_->dcache_write(&mem_data, mem_addr, mem_bytes, ptbr_);  
+          core_->dcache_write(&mem_data, mem_addr, mem_bytes, ptbr_, id_);  
           break;
         default:
           std::abort();
@@ -784,7 +784,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         case 6: {
           // store word and unit strided (not checking for unit stride)          
           uint32_t mem_data = *(uint32_t *)(vreg_file_.at(instr.getVs3()).data() + i);
-          core_->dcache_write(&mem_data, mem_addr, 4, ptbr_);
+          core_->dcache_write(&mem_data, mem_addr, 4, ptbr_, id_);
           DP(4, "STORE MEM: ADDRESS=0x" << std::hex << mem_addr << ", DATA=0x" << mem_data);
           break;
         } 
@@ -1426,7 +1426,7 @@ void Warp::execute(const Instr &instr, pipeline_trace_t *trace) {
         auto u     = rsdata[t][0].i;
         auto v     = rsdata[t][1].i;
         auto lod   = rsdata[t][2].i;
-        auto color = core_->tex_read(unit, u, v, lod, &trace->mem_addrs.at(t), ptbr_);
+        auto color = core_->tex_read(unit, u, v, lod, &trace->mem_addrs.at(t), ptbr_, id_);
         rddata[t].i = color;
       }
       rd_write = true;

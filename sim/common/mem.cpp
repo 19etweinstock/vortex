@@ -9,7 +9,7 @@ using namespace vortex;
 
 
 #define DEBUG(args) 
-#define DEBUG(args) args
+#define DEBUG_EN(args) args
 
 RamMemDevice::RamMemDevice(const char *filename, uint32_t wordSize) 
   : wordSize_(wordSize) {
@@ -188,13 +188,13 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, ui
   }
 }
 
-void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
+void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, uint64_t ptbr, uint32_t wid) {
   DEBUG(std::cout << std::hex << addr << std::endl;)
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
   } else {
-    uint32_t flagMask = sup ? 8 : 1;
+    uint32_t flagMask = 1 << wid;
     TLBEntry t = this->tlbLookup(addr, flagMask, ptbr);
     //                          this is the offset portion
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
@@ -205,13 +205,13 @@ void MemoryUnit::read(void *data, uint64_t addr, uint64_t size, bool sup, uint64
   return decoder_.read(data, pAddr, size);
 }
 
-void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr) {
+void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, uint64_t ptbr, uint32_t wid) {
   DEBUG(std::cout << std::hex << addr << std::endl;)
   uint64_t pAddr;
   if (disableVM_) {
     pAddr = addr;
   } else {
-    uint32_t flagMask = sup ? 8 : 1;
+    uint32_t flagMask = 1 << wid;
     TLBEntry t = tlbLookup(addr, flagMask, ptbr);
     pAddr = t.pfn * pageSize_ + addr % pageSize_;
   }
@@ -238,6 +238,18 @@ RAM::RAM(uint32_t page_size)
   , last_page_(nullptr)
   , last_page_index_(0) {    
    assert(ispow2(page_size));
+   this->clear();
+
+  // this is where we need to maintain the PFN
+  // put the frame table at address 0
+  // FTEntry* frame_table = reinterpret_cast<FTEntry*>(this->get(0));
+
+  FTEntry frame_table;
+  frame_table.protected_ = 1;
+  frame_table.mapped = 1;
+  for (int i = 0; i < 1 << page_bits_; i++)
+    *this->get(i) =  0;
+  this->write(&frame_table, 0, sizeof(FTEntry));
 }
 
 RAM::~RAM() {
@@ -373,19 +385,6 @@ uint64_t RAM::loadHexImage(const char* filename, uint64_t addrBytes) {
   uint32_t offset = 0;
   char *line = content.data();
 
-  this->clear();
-
-  // this is where we need to maintain the PFN
-  // put the frame table at address 0
-  // FTEntry* frame_table = reinterpret_cast<FTEntry*>(this->get(0));
-
-  FTEntry frame_table;
-  frame_table.protected_ = 1;
-  frame_table.mapped = 1;
-  for (int i = 0; i < 1 << page_bits_; i++)
-    *this->get(i) =  0;
-  this->write(&frame_table, 0, sizeof(FTEntry));
-
   // need to return the physical frame number corresponding to this program
   // just find the next unmapped pfn
   uint64_t pfn = -1;
@@ -415,7 +414,7 @@ uint64_t RAM::loadHexImage(const char* filename, uint64_t addrBytes) {
           // this->write(&value, addr, sizeof(value));
           // need to make this addr virtualized
           DEBUG(std::cout << std::hex << addr << std::endl;)
-          mmu_.write(&value, addr, 1, 0, pfn);
+          mmu_.write(&value, addr, 1, pfn, 0);
           // *this->get(addr) = value;
         }
         break;

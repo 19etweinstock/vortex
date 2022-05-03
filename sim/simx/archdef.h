@@ -6,6 +6,7 @@
 #include <cstdlib>
 #include <stdio.h>
 #include "types.h"
+#include <vector>
 
 namespace vortex {
 
@@ -19,13 +20,13 @@ private:
   uint16_t num_regs_;
   uint16_t num_csrs_;
   uint16_t num_barriers_;
-  uint64_t ptbr_;
+  std::vector<uint64_t> ptbr_;
   
 public:
   ArchDef(uint16_t num_cores, 
           uint16_t num_warps, 
           uint16_t num_threads,
-          uint64_t ptbr)   
+          std::vector<uint64_t> ptbr)   
     : num_cores_(num_cores)
     , num_warps_(num_warps)
     , num_threads_(num_threads)
@@ -69,7 +70,7 @@ public:
     return num_cores_;
   }
 
-  uint64_t ptbr() const {
+  std::vector<uint64_t> ptbr() const {
     return ptbr_;
   }
 };

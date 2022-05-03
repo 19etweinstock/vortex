@@ -71,8 +71,8 @@ public:
 
   void attach(MemDevice &m, uint64_t start, uint64_t end);
 
-  void read(void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);  
-  void write(const void *data, uint64_t addr, uint64_t size, bool sup, uint64_t ptbr);
+  void read(void *data, uint64_t addr, uint64_t size, uint64_t ptbr, uint32_t wid);  
+  void write(const void *data, uint64_t addr, uint64_t size, uint64_t ptbr, uint32_t wid);
 
   void tlbFlush() {
     tlb_.clear();

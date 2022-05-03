@@ -107,13 +107,13 @@ public:
   
   WarpMask barrier(uint32_t bar_id, uint32_t count, uint32_t warp_id);
 
-  void icache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr);
+  void icache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid);
 
-  void dcache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr);
+  void dcache_read(void* data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid);
 
-  void dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t ptbr);
+  void dcache_write(const void* data, uint64_t addr, uint32_t size, uint64_t ptbr, uint32_t wid);
 
-  uint32_t tex_read(uint32_t unit, uint32_t lod, uint32_t u, uint32_t v, std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr);
+  uint32_t tex_read(uint32_t unit, uint32_t lod, uint32_t u, uint32_t v, std::vector<mem_addr_size_t>* mem_addrs, uint64_t ptbr, uint32_t wid);
 
   void trigger_ecall();
 
