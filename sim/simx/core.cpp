@@ -74,7 +74,8 @@ Core::Core(const SimContext& ctx, const ArchDef &arch, uint32_t id)
     , fetch_latch_("fetch")
     , decode_latch_("decode")
     , pending_icache_(arch_.num_warps())
-{  
+{ 
+  // split warps equally between all active programs
   for (uint32_t i = 0; i < arch_.num_warps() / arch_.ptbr().size(); ++i) {
     for (uint32_t j = 0, size = arch_.ptbr().size(); j < size; ++j)
       warps_.at(i*size+j) = std::make_shared<Warp>(this, i*size+j, arch_.ptbr()[j]);
@@ -130,8 +131,10 @@ Core::~Core() {
 void Core::reset() {
   for (auto& warp : warps_) {
     warp->clear();
+    // make it so all warps have 1 active thread
     warp->setTmask(0, true);
   }
+  // activate 1 warp of each program
   active_warps_ = (1 << arch_.ptbr().size()) -1;
 
   for (auto& tex_unit : tex_units_) {

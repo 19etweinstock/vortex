@@ -158,8 +158,6 @@ MemoryUnit::TLBEntry MemoryUnit::handlePageFault(uint64_t vAddr, uint32_t flagMa
     for (uint64_t i = 0; i < pageSize_; i++)
       decoder_.write(&zero, i + pfn * pageSize_, 1);
 
-    
-
     PTEntry entry;
     entry.valid = 1;
     entry.pfn = pfn;
@@ -177,11 +175,12 @@ MemoryUnit::TLBEntry MemoryUnit::tlbLookup(uint64_t vAddr, uint32_t flagMask, ui
     if (iter->second.flags & flagMask)
       return iter->second;
     else {
-      //PAGE FAULT
+      //PAGE FAULT due to flag mismatch
       DEBUG(std::cout << "flags" << std::endl;)
       return handlePageFault(vAddr, flagMask, ptbr);
     }
   } else {
+    // PAGE FAULT due to TLB miss
       DEBUG(std::cout << "miss" << std::endl;)
     // throw PageFault(vAddr, true);
       return handlePageFault(vAddr, flagMask, ptbr);
@@ -219,6 +218,7 @@ void MemoryUnit::write(const void *data, uint64_t addr, uint64_t size, uint64_t 
   decoder_.write(data, pAddr, size);
 }
 
+// tlbAdd returns the added entry for code elegance
 MemoryUnit::TLBEntry MemoryUnit::tlbAdd(uint64_t virt, uint64_t pfn, uint32_t flags) {
   DEBUG(std::cout << virt / pageSize_ << std::endl;)
   tlb_[virt / pageSize_] = TLBEntry(pfn, flags);
